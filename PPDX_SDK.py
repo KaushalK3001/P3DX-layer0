@@ -166,6 +166,7 @@ def execute_guest_attestation():
 def getAttestationToken(config):
 
     auth_server_url= config["apd_url"]
+    
     headers={'clientId': "73599b23-6550-4f01-882d-a2db75ba24ba", 'clientSecret': "15a874120135e4eed4782c8b51385649fee55562", 'Content-Type': config["Content-Type"]}
 
     with open('keys/jwt-response.txt', 'r') as file:
@@ -181,20 +182,23 @@ def getAttestationToken(config):
             "role": config["role"],
             "context": context
          }
+
+
     dataJson=json.dumps(data)
     r= requests.post(auth_server_url,headers=headers,data=dataJson)
 
     if(r.status_code==200):
-        print("Attestation Token verified and Token recieved.")
+        print("P3DX Token Recieved")
         jsonResponse=r.json()
-        token=jsonResponse.get('results').get('accessToken')
+        token=jsonResponse.get('results', {}).get('accessToken', '')
         #print(token)
         return token
     else:
-        print("Attestation Token fetching failed.", r.text)
+        print("Token fetching failed.", r.text)
         with open("output/output.json", "w") as f:
             # make status code 900 & status as "Error" to indicate that the process has failed
-            json.dump({"status_code": "900", "status": "TEE Attestation error"}, f)
+            json.dump({"status_code": "900", "status": "Token Fetch error"}, f)
+    return None    
 
 
 # ADEX SPECIFIC FUNCTIONS

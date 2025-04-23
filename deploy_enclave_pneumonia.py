@@ -99,41 +99,41 @@ if __name__ == "__main__":
     
     #PPDX_SDK.profiling_steps('Application Start', 0)
     #remove_profiling_file()
-    remove_files()
+    # remove_files()
 
-    if len(sys.argv) < 2:
-        print("Error: Missing GitHub raw link argument.")
-        print("Usage: sudo python3 deploy_enclave.py <github_raw_link>")
-        sys.exit(1)  # Exit with an error code
+    # if len(sys.argv) < 2:
+    #     print("Error: Missing GitHub raw link argument.")
+    #     print("Usage: sudo python3 deploy_enclave.py <github_raw_link>")
+    #     sys.exit(1)  # Exit with an error code
 
-    github_raw_link = sys.argv[1]
-    if not github_raw_link.startswith("https://raw.githubusercontent.com/"):
-        print("Error: Invalid GitHub raw link format.")
-        sys.exit(1)
+    # github_raw_link = sys.argv[1]
+    # if not github_raw_link.startswith("https://raw.githubusercontent.com/"):
+    #     print("Error: Invalid GitHub raw link format.")
+    #     sys.exit(1)
 
     # Step 1 - Pulling docker compose & extracting docker image link
-    box_out("Pulling Docker Compose from GitHub...")
-    PPDX_SDK.pull_compose_file(github_raw_link)
-    print('Extracting docker link...')
-    link = subprocess.check_output(["sudo", "docker", "compose", "config", "--images"]).decode().strip()
-    print("Image information:", link)
+    # box_out("Pulling Docker Compose from GitHub...")
+    # PPDX_SDK.pull_compose_file(github_raw_link)
+    # print('Extracting docker link...')
+    # link = subprocess.check_output(["sudo", "docker", "compose", "config", "--images"]).decode().strip()
+    # print("Image information:", link)
 
     # Step 3 - Docker image pulling
-    box_out("Pulling docker image...")
-    PPDX_SDK.pull_docker_image(link)
-    print("Pulled docker image")
+    # box_out("Pulling docker image...")
+    # PPDX_SDK.pull_docker_image(link)
+    # print("Pulled docker image")
 
     # Step 2 - Key generation
     box_out("Generating and saving key pair...")
-    PPDX_SDK.setState("TEE Attestation & Authorisation", "Step 2",2,5,address)
+    # PPDX_SDK.setState("TEE Attestation & Authorisation", "Step 2",2,5,address)
     PPDX_SDK.generate_and_save_key_pair()
 
-    # Step 4 - Measuring image and storing in vTPM
-    box_out("Measuring Docker image into vTPM...")
-    PPDX_SDK.measureDockervTPM(link)
-    print("Measured and stored in vTPM")
+    # # Step 4 - Measuring image and storing in vTPM
+    # box_out("Measuring Docker image into vTPM...")
+    # PPDX_SDK.measureDockervTPM(link)
+    # print("Measured and stored in vTPM")
 
-    # Step 5 - Send VTPM & public key to MAA & get attestation token
+    # # Step 5 - Send VTPM & public key to MAA & get attestation token
     box_out("Guest Attestation Executing...")
     PPDX_SDK.execute_guest_attestation()
     print("Guest Attestation complete. JWT received from MAA")
@@ -141,11 +141,12 @@ if __name__ == "__main__":
     # Step 6 - Send the JWT to APD
     box_out("Sending JWT to APD for verification...")
     token=PPDX_SDK.getAttestationToken(config)
+    # token = 'eyJpc3MiOiJjb3MuaXVkeC5pbyIsInR5cCI6IkpXVCIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiI4YjE0MjFiOC0wMTJiLTRhNDgtYTUyNC1lNmRmZDBlMjIxMjMiLCJpc3MiOiJjb3MuaXVkeC5pbyIsImF1ZCI6InJzLml1ZHguaW8iLCJleHAiOjE3NDU0MzM3MDQsImlhdCI6MTc0NTM5MDUwNCwiaWlkIjoicmk6OGJkZWJjNjMtY2NiMC00OTMwLWJkYmItNjBlYTlkN2Y3NTk5Iiwicm9sZSI6ImNvbnN1bWVyIiwiY29ucyI6eyJwdWJsaWNLZXkiOiJNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQTBjalE4ZWF6ZHlkcXNYeWpBSFRCellIMFFQKzdRMkpYYjJ1dmQ4NllWN2VPOEtWQ2d6VWRRekZrSHl6M1FZb2l5cjI3OWwwam5IaTdlQkJDMHNrL09OMHVxbHdDM05VRXlleTloVkxiaktsS3pxam4yN2xJbnpCRWo4aGtJWGxtQTBHREoyb08rWXg1eCtOa3dYa1lHR0VJOFVsQk1SN1VZRG9nQW1WZWJNSWNvWjh6eUUyRkduL05HaTNkZ3FzRkpoZVJ4UGtwV0xMcU8yTithU292YlNZM2hLZFRySmNlZ0JaQUlnazVrYWljZjlrUlNLVklWUnczb1R2Y0RhRU12NnpBaVBWU3M2WUR5TkZzU3Boc2ErcEcxcTlkUGdnYjVYanJYZWZUK1JHMkxETlpXemtDdVhXcUJUOTBrajFUdmV2SkJyQ25qZ08rK1QzNk5xWmEwUUlEQVFBQiJ9LCJyZyI6ImVlZDNhM2NhLWU2NzktNDlmYS1hZGE1LWEwNDQ5ODljMjJiZSJ9._vmGgY0nPdwHBZGMZnyhI8sUhaMxlHQiMCayLBzO5NSCF4bcCqjuq5NvjCgHrfQlxw0ktD4jGBh1QWxK_fiYJA'
     print("Access token received from APD")
 
     # Step 7 - Getting data
     box_out("Getting files from RS...")
-    PPDX_SDK.setState("Getting data into Secure enclave","Step 3",3,5,address)
+    # PPDX_SDK.setState("Getting data into Secure enclave","Step 3",3,5,address)
     PPDX_SDK.getFileFromResourceServer(token)
 
     box_out("Decrypting & storing files...")
@@ -154,9 +155,9 @@ if __name__ == "__main__":
 
     # Executing the application in the docker
     box_out("Running the Application...")
-    PPDX_SDK.setState("Running pneumonia detection application", "Step 4",4,5,address)
+    # PPDX_SDK.setState("Running pneumonia detection application", "Step 4",4,5,address)
     subprocess.run(["sudo", "docker", "compose", 'up'])
 
-    PPDX_SDK.setState("Secure Execution Complete", "Step 5", 5, 5, address)
+    # PPDX_SDK.setState("Secure Execution Complete", "Step 5", 5, 5, address)
     print('DONE')
     print('Output saved to /tmp/output')
