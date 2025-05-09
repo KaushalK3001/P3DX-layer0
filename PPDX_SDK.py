@@ -169,11 +169,11 @@ def getAttestationToken(config):
     
     headers={'clientId': "73599b23-6550-4f01-882d-a2db75ba24ba", 'clientSecret': "15a874120135e4eed4782c8b51385649fee55562", 'Content-Type': config["Content-Type"]}
 
-    with open('keys/jwt-response.txt', 'r') as file:
+    with open('data/token.txt', 'r') as file:
         token = file.read().strip()
 
     context={
-                "jwtMAA": token
+                "cocoToken": token
             }
 
     data={
@@ -191,13 +191,13 @@ def getAttestationToken(config):
         print("P3DX Token Recieved")
         jsonResponse=r.json()
         token=jsonResponse.get('results', {}).get('accessToken', '')
-        #print(token)
+        print(token)
         return token
     else:
         print("Token fetching failed.", r.text)
-        with open("output/output.json", "w") as f:
-            # make status code 900 & status as "Error" to indicate that the process has failed
-            json.dump({"status_code": "900", "status": "Token Fetch error"}, f)
+        # with open("output/output.json", "w") as f:
+        #     # make status code 900 & status as "Error" to indicate that the process has failed
+        #     json.dump({"status_code": "900", "status": "Token Fetch error"}, f)
     return None    
 
 
@@ -273,7 +273,7 @@ def getSOFDataFromADEX(config, token):
 
         # if SOF_data.csv exists, delete it
         # store in /tmp/FCinput directory as SOF_data.csv
-        folder_path = os.path.expanduser("/tmp/FCinput")
+        folder_path = os.path.expanduser("data/input")
         file_path = os.path.join(folder_path, "SOF_data.csv")
         with open(file_path, 'w', newline='') as csvfile:
             # Define the CSV field names
@@ -304,7 +304,7 @@ def getYieldDataFromADEX(config, token):
         #     json.dump(results, file)
         filtered_data = [item for item in results if item['year'] == 2024]
 
-        folder_path = os.path.expanduser("/tmp/FCinput")
+        folder_path = os.path.expanduser("data/input")
         file_path = os.path.join(folder_path, "Yield_data.csv")
         with open(file_path, 'w', newline='') as csvfile:
             # Define the CSV field names
@@ -335,7 +335,7 @@ def getAPMCDataFromADEX(config, token):
         #     json.dump(results, file)
         filtered_data = [item for item in results if item['year'] == 2025]
 
-        folder_path = os.path.expanduser("/tmp/FCinput")
+        folder_path = os.path.expanduser("data/input")
         file_path = os.path.join(folder_path, "APMC_data.csv")
         with open(file_path, 'w', newline='') as csvfile:
             # Define the CSV field names
@@ -375,7 +375,7 @@ def getFarmerData(config, ppb_number, farmer_data_token, attestation_token):
         if response.status_code == 200:
             print("Farmer data fetched successfully.")
             
-            folder_path = os.path.expanduser("/tmp/FCinput")
+            folder_path = os.path.expanduser("data/input")
             file_path = os.path.join(folder_path, "farmer_data.json")
 
             # Write the response content to a file
