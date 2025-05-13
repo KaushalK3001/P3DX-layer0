@@ -89,12 +89,15 @@ if __name__ == "__main__":
     config_file = "config.json"
     config = load_config(config_file)
 
+    address = config["address"]
+
     with open('data/context.json', 'r') as file:
         context = json.load(file)
     ppb_number = context["ppb_number"]
 
-    # Step 7 - send Coco token to APD
+    # Step 2 - send Coco token to APD
     box_out("Sending Coco token to APD for verification...")
+    PPDX_SDK.setState("TEE Attestation & Authorisation","Step 2",2,5,address)
     attestationToken = PPDX_SDK.getAttestationToken(config)
     print("Attestation token received from APD")
     print(attestationToken)
@@ -111,7 +114,7 @@ if __name__ == "__main__":
 
     # Step 8 - Getting files from RS
     box_out("Getting files from RS...")
-    #PPDX_SDK.setState("Getting data into Secure enclave","Step 3",3,5,address)
+    PPDX_SDK.setState("Getting data into Secure enclave","Step 3",3,5, address)
 
     # getting files from ADEX
     PPDX_SDK.getSOFDataFromADEX(config, adexDataToken)
@@ -121,3 +124,5 @@ if __name__ == "__main__":
     # getting Rytabandhu farmer data
     box_out("Getting Rytabandhu farmer data")
     PPDX_SDK.getFarmerData(config, ppb_number, farmerDataToken, attestationToken)
+
+    PPDX_SDK.setState("Computing farmer credit amount in TEE","Step 4",4,5, address)
