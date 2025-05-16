@@ -163,14 +163,11 @@ def execute_guest_attestation():
 
 
 #APD verifies quote and releases token
-def getAttestationToken(config):
+def getAttestationToken(config, token):
 
     auth_server_url= config["apd_url"]
     
     headers={'clientId': "73599b23-6550-4f01-882d-a2db75ba24ba", 'clientSecret': "15a874120135e4eed4782c8b51385649fee55562", 'Content-Type': config["Content-Type"]}
-
-    with open('data/token.txt', 'r') as file:
-        token = file.read().strip()
 
     context={
                 "cocoToken": token
