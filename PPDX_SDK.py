@@ -270,7 +270,7 @@ def getSOFDataFromADEX(config, token):
 
         # if SOF_data.csv exists, delete it
         # store in /tmp/FCinput directory as SOF_data.csv
-        folder_path = os.path.expanduser("data/input")
+        folder_path = os.path.expanduser("/app/data")
         file_path = os.path.join(folder_path, "SOF_data.csv")
         with open(file_path, 'w', newline='') as csvfile:
             # Define the CSV field names
@@ -301,7 +301,7 @@ def getYieldDataFromADEX(config, token):
         #     json.dump(results, file)
         filtered_data = [item for item in results if item['year'] == 2024]
 
-        folder_path = os.path.expanduser("data/input")
+        folder_path = os.path.expanduser("/app/data")
         file_path = os.path.join(folder_path, "Yield_data.csv")
         with open(file_path, 'w', newline='') as csvfile:
             # Define the CSV field names
@@ -332,7 +332,7 @@ def getAPMCDataFromADEX(config, token):
         #     json.dump(results, file)
         filtered_data = [item for item in results if item['year'] == 2025]
 
-        folder_path = os.path.expanduser("data/input")
+        folder_path = os.path.expanduser("/app/data")
         file_path = os.path.join(folder_path, "APMC_data.csv")
         with open(file_path, 'w', newline='') as csvfile:
             # Define the CSV field names
@@ -372,7 +372,7 @@ def getFarmerData(config, ppb_number, farmer_data_token, attestation_token):
         if response.status_code == 200:
             print("Farmer data fetched successfully.")
             
-            folder_path = os.path.expanduser("data/input")
+            folder_path = os.path.expanduser("/app/data")
             file_path = os.path.join(folder_path, "farmer_data.json")
 
             # Write the response content to a file

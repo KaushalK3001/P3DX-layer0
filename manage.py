@@ -47,38 +47,39 @@ def get_state():
 #INFERENCE: Returns the inference as a JSON object, containing runOutput & labels
 @app.route("/enclave/inference", methods=["GET"])
 def get_inference():
-    # print("STARTING inference")
+    print("STARTING inference")
     logger = logging.getLogger()
-    logging.debug('STARTING INFERNCE')
+    logging.debug('STARTING INFERENCE')
     logger.handlers[0].flush()
     global state
+
     # global app_name
-    if(state["step"]!=5):
-        response={
-                "title": "Error: No Inference Output/File does not exist",
-                "description": "No inference output found."
-            }
-        return jsonify(response), 403
+    # if(state["step"]!=5):
+    #     response={
+    #             "title": "Error: No Inference Output/File does not exist",
+    #             "description": "No inference output found."
+    #         }
+    #     return jsonify(response), 403
 
     #give output file path
-    #output_file = "/app/..."
+    output_file = "/app/output/output.json"
     
-    if os.path.exists(output_file):
-        try:
-            # Use subprocess to run chmod with sudo
-            result = subprocess.run(['sudo', 'chmod', '755', output_file], 
-                                    check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # if os.path.exists(output_file):
+    #     try:
+    #         # Use subprocess to run chmod with sudo
+    #         result = subprocess.run(['sudo', 'chmod', '755', output_file], 
+    #                                 check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             
-            # Check result
-            if result.returncode == 0:
-                print(f"Successfully set a+x permissions on file: {output_file}")
-            else:
-                print(f"Failed to set permissions. Error: {result.stderr.decode()}")
+    #         # Check result
+    #         if result.returncode == 0:
+    #             print(f"Successfully set a+x permissions on file: {output_file}")
+    #         else:
+    #             print(f"Failed to set permissions. Error: {result.stderr.decode()}")
 
-        except subprocess.CalledProcessError as e:
-            print(f"Error executing sudo chmod: {e.stderr.decode()}")
-    else:
-        print(f"File not found: {output_file}")
+    #     except subprocess.CalledProcessError as e:
+    #         print(f"Error executing sudo chmod: {e.stderr.decode()}")
+    # else:
+    #     print(f"File not found: {output_file}")
 
 
     if os.path.isfile(output_file):

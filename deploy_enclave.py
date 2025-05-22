@@ -38,55 +38,8 @@ def box_out(message):
     print("+" + "-" * (max_width + 2) + "+")
 
 
-def remove_files():
-    file_path = os.path.join('.','docker-compose.yml')
-    if os.path.exists(file_path):
-        os.remove(file_path)
-        print(f"Removed file: {file_path}")
-    else:
-        print(f"File not found: {file_path}")
-    
-    folder_path = os.path.join('/tmp', 'FCoutput')
-    if os.path.exists(folder_path):
-        shutil.rmtree(folder_path)
-        print(f"Removed folder and contents: {folder_path}")
-    else:
-        print(f"Folder not found: {folder_path}")
-    
-    # make FCoutput folder
-    os.makedirs('/tmp/FCoutput', exist_ok=True)
-
-    folder_path = os.path.join('/tmp', 'FCcontext')
-    if os.path.exists(folder_path):
-        shutil.rmtree(folder_path)
-        print(f"Removed folder and contents: {folder_path}")
-    else:
-        print(f"Folder not found: {folder_path}")
-
-    # make contextFolder folder if it does not exist
-    os.makedirs('/tmp/FCcontext', exist_ok=True)
-
-    folder_path = os.path.join('/tmp', 'FCinput')
-    if os.path.exists(folder_path):
-        shutil.rmtree(folder_path)
-        print(f"Removed folder and contents: {folder_path}")
-    else:
-        print(f"Folder not found: {folder_path}")
-
-    # make contextFolder folder if it does not exist
-    os.makedirs('/tmp/FCinput', exist_ok=True)
-
-    folder_path = os.path.join('.', 'keys')
-    if os.path.exists(folder_path):
-        shutil.rmtree(folder_path)
-        print(f"Removed folder and contents: {folder_path}")
-    else:
-        print(f"Folder not found: {folder_path}")
-
-
 # Start the main process
 if __name__ == "__main__":
-     
     
     url = "http://127.0.0.1:8006/aa/token"
     params = {
@@ -103,19 +56,18 @@ if __name__ == "__main__":
         print("Failed to get token. Status code:", response.status_code)
         print("Response:", response.text)
 
-
     config_file = "config.json"
     config = load_config(config_file)
+    coco_address = config["coco_address"]
 
-    address = config["address"]
-
-    with open('data/context.json', 'r') as file:
+    with open('/app/context/context.json', 'r') as file:
         context = json.load(file)
+    print(context)
     ppb_number = context["ppb_number"]
 
     # Step 2 - send Coco token to APD
     box_out("Sending Coco token to APD for verification...")
-    # PPDX_SDK.setState("TEE Attestation & Authorisation","Step 2",2,5,address)
+    PPDX_SDK.setState("TEE Attestation & Authorisation","Step 2",2,5,coco_address)
     attestationToken = PPDX_SDK.getAttestationToken(config, token)
     print("Attestation token received from APD")
     print(attestationToken)
@@ -132,7 +84,7 @@ if __name__ == "__main__":
 
     # Step 8 - Getting files from RS
     box_out("Getting files from RS...")
-    # PPDX_SDK.setState("Getting data into Secure enclave","Step 3",3,5, address)
+    PPDX_SDK.setState("Getting data into Confidential Container","Step 3",3,5, coco_address)
 
     # getting files from ADEX
     PPDX_SDK.getSOFDataFromADEX(config, adexDataToken)
@@ -143,4 +95,4 @@ if __name__ == "__main__":
     box_out("Getting Rytabandhu farmer data")
     PPDX_SDK.getFarmerData(config, ppb_number, farmerDataToken, attestationToken)
 
-    # PPDX_SDK.setState("Computing farmer credit amount in TEE","Step 4",4,5, address)
+    PPDX_SDK.setState("Computing farmer credit amount in Confidential Container","Step 4",4,5, coco_address)

@@ -1,1 +1,7 @@
 /data/input/*
+venv/*
+__pycache__/*
+/data/*
+keys/*
+README.md
+loadedDict.pkl
